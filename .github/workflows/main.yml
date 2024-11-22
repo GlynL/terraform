@@ -1,0 +1,67 @@
+name: CI/CD Pipeline for Terraform and Deployment
+
+on:
+  push:
+    branches:
+      - main  # Trigger deployment on push to the main branch
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout code from the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Set up Terraform
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: '1.4.0'  # Set the version of Terraform you want to use
+
+      # Terraform initialization and plan
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Plan
+        run: terraform plan
+
+      # Apply Terraform configuration to provision or update the infrastructure
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+
+  # deploy:
+  #   needs: terraform  # This ensures the deployment happens after the Terraform job
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     # Set up SSH key to connect to the EC2 instance
+  #     - name: Set up SSH key
+  #       uses: webfactory/ssh-agent@v0.5.3
+  #       with:
+  #         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}  # Store your private key in GitHub Secrets
+
+  #     # Deploy application to EC2 instance
+  #     - name: Deploy to EC2
+  #       run: |
+  #         # Fetch the public IP address of the instance created by Terraform
+  #         EC2_IP=$(terraform output -raw instance_ip)
+
+  #         # SSH into the EC2 instance and deploy the application
+  #         ssh -o StrictHostKeyChecking=no ubuntu@$EC2_IP << 'EOF'
+  #           # Update and install dependencies on EC2
+  #           sudo apt-get update -y
+  #           sudo apt-get install -y git
+
+  #           # Clone or pull the latest changes from GitHub
+  #           cd /home/ubuntu/myapp || git clone https://github.com/myusername/myapp.git /home/ubuntu/myapp
+  #           cd /home/ubuntu/myapp
+  #           git pull origin main  # Pull latest changes from the repository
+
+  #           # Run deployment script
+  #           ./deploy.sh  # Replace with your custom deployment steps
+
+  #           # Restart application or services
+  #           sudo systemctl restart myapp.service
+  #         EOF
