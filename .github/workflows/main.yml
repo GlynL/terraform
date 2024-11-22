@@ -39,6 +39,8 @@ jobs:
 
       # Apply Terraform configuration to provision or update the infrastructure
       - name: Terraform Apply
+        env:
+          TF_VAR_ssh_key_public: ${{ secrets.SSH_KEY_PUBLIC }}
         run: terraform apply -auto-approve
 
   # deploy:

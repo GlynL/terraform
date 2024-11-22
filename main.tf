@@ -26,6 +26,11 @@ resource "aws_instance" "app_server" {
   }
 }
 
+variable "ssh_key_public" {
+  description = "The public SSH key to use for the EC2 instance"
+  type        = string
+}
+
 resource "aws_key_pair" "my_key" {
   key_name   = "my-ec2-key"
   public_key = var.ssh_key_public
