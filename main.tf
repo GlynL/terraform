@@ -28,5 +28,5 @@ resource "aws_instance" "app_server" {
 
 resource "aws_key_pair" "my_key" {
   key_name   = "my-ec2-key"
-  public_key = file("~/.ssh/id_ed25519.pub")  # Path to your public SSH key
+  public_key = var.ssh_key_public
 }

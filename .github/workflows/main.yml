@@ -33,6 +33,8 @@ jobs:
         run: terraform init
 
       - name: Terraform Plan
+        env:
+          TF_VAR_ssh_key_public: ${{ secrets.SSH_KEY_PUBLIC }}
         run: terraform plan
 
       # Apply Terraform configuration to provision or update the infrastructure
