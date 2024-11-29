@@ -31,7 +31,12 @@ variable "ssh_key_public" {
   type        = string
 }
 
+variable "ssh_key_private" {
+  description = "The private SSH key to use for the EC2 instance"
+  type        = string
+}
+
 resource "aws_key_pair" "my_key" {
-  key_name   = "my-ec2-key"
+  key_name   = "ssh-key-pub"
   public_key = var.ssh_key_public
 }
