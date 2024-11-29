@@ -18,7 +18,8 @@ resource "aws_instance" "app_server" {
   instance_type = "t2.micro"
 
   # Associate the instance with the SSH key pair
-  key_name = aws_key_pair.my_key.key_name  # could be creating one rather htan using mine
+  # key_name = aws_key_pair.my_key.key_name  # could be creating one rather htan using mine
+  key_name = "ssh-key-pub" # use existing - can't duplicate creating
 
   vpc_security_group_ids = ["sg-02aaa1827e61fe20a"]
 
@@ -37,7 +38,7 @@ variable "ssh_key_private" {
   type        = string
 }
 
-resource "aws_key_pair" "my_key" {
-  key_name   = "ssh-key-pub"
-  public_key = var.ssh_key_public
-}
+# resource "aws_key_pair" "my_key" {
+#   key_name   = "ssh-key-pub"
+#   public_key = var.ssh_key_public
+# }
