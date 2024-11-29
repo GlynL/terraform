@@ -45,7 +45,7 @@ jobs:
 
       - name: Save ec2 tst ip
         id: ec2_ip_test
-        run: echo "$(terraform output -raw instance_public_ip)
+        run: echo "$(terraform output -raw instance_public_ip)""
 
       - name: Save ec2 ip
         id: ec2_ip
