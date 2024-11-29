@@ -41,7 +41,7 @@ jobs:
       - name: Terraform Apply
         env:
           TF_VAR_ssh_key_public: ${{ secrets.SSH_KEY_PUBLIC }}
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve && echo "$(terraform output -raw instance_public_ip)"
 
       - name: Save ec2 tst ip
         id: ec2_ip_test
