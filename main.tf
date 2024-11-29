@@ -18,8 +18,9 @@ resource "aws_instance" "app_server" {
   instance_type = "t2.micro"
 
   # Associate the instance with the SSH key pair
-  key_name = aws_key_pair.my_key.key_name  # Use the key pair created above
+  key_name = aws_key_pair.my_key.key_name  # could be creating one rather htan using mine
 
+  vpc_security_group_ids = ["sg-02aaa1827e61fe20a"]
 
   tags = {
     Name = "testing"
