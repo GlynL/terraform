@@ -46,7 +46,7 @@ jobs:
 
       - name: Save ec2 tst ip
         id: ec2_ip_test
-        run: echo ${{ steps.apply.outputs }}
+        run: echo ${{ steps.apply.outputs.instance_public_ip }}
 
       - name: Save ec2 ip
         id: ec2_ip
