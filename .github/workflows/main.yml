@@ -43,15 +43,15 @@ jobs:
           TF_VAR_ssh_key_public: ${{ secrets.SSH_KEY_PUBLIC }}
         run: terraform apply -auto-approve
 
+      - name: Save ec2 ip
+        id: ec2_ip
+        run: echo "EC2_IP=$(terraform output -raw instance_public_ip)" >> $GITHUB_OUTPUT
+
   deploy:
     needs: terraform # This ensures the deployment happens after the Terraform job
     runs-on: ubuntu-latest
 
     steps:
-      - name: Save ec2 ip
-        id: ec2_ip
-        run: echo "EC2_IP=$(terraform output -raw instance_public_ip)" >> $GITHUB_OUTPUT
-
       # Set up the SSH private key
       - name: Set up SSH key
         run: |
