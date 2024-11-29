@@ -39,13 +39,14 @@ jobs:
 
       # Apply Terraform configuration to provision or update the infrastructure
       - name: Terraform Apply
+        id: apply
         env:
           TF_VAR_ssh_key_public: ${{ secrets.SSH_KEY_PUBLIC }}
-        run: terraform apply -auto-approve && echo "$(terraform output -raw instance_public_ip)"
+        run: terraform apply -auto-approve
 
       - name: Save ec2 tst ip
         id: ec2_ip_test
-        run: echo "$(terraform output -raw instance_public_ip)"
+        run: echo ${{ steps.apply.outputs }}
 
       - name: Save ec2 ip
         id: ec2_ip
