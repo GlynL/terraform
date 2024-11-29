@@ -21,6 +21,7 @@ resource "aws_instance" "app_server" {
   # key_name = aws_key_pair.my_key.key_name  # could be creating one rather htan using mine
   key_name = "ssh-key-pub" # use existing - can't duplicate creating
 
+  # probably shouldn't be hardcoded here
   vpc_security_group_ids = ["sg-02aaa1827e61fe20a"]
 
   tags = {

@@ -35,47 +35,38 @@ jobs:
       - name: Terraform Plan
         env:
           TF_VAR_ssh_key_public: ${{ secrets.SSH_KEY_PUBLIC }}
-          TF_VAR_ssh_key_private: ${{ secrets.SSH_KEY_PRIVATE }}
         run: terraform plan -input=false
 
       # Apply Terraform configuration to provision or update the infrastructure
       - name: Terraform Apply
         env:
           TF_VAR_ssh_key_public: ${{ secrets.SSH_KEY_PUBLIC }}
-          TF_VAR_ssh_key_private: ${{ secrets.SSH_KEY_PRIVATE }}
         run: terraform apply -auto-approve
 
-  # deploy:
-  #   needs: terraform  # This ensures the deployment happens after the Terraform job
-  #   runs-on: ubuntu-latest
+  deploy:
+    needs: terraform # This ensures the deployment happens after the Terraform job
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #     # Set up SSH key to connect to the EC2 instance
-  #     - name: Set up SSH key
-  #       uses: webfactory/ssh-agent@v0.5.3
-  #       with:
-  #         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}  # Store your private key in GitHub Secrets
+    steps:
+      - name: Save ec2 ip
+        id: ec2_ip
+        run: echo "EC2_IP=$(terraform output -raw instance_ip)" >> $GITHUB_OUTPUT
 
-  #     # Deploy application to EC2 instance
-  #     - name: Deploy to EC2
-  #       run: |
-  #         # Fetch the public IP address of the instance created by Terraform
-  #         EC2_IP=$(terraform output -raw instance_ip)
+      # Set up the SSH private key
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY_PRIVATE }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
 
-  #         # SSH into the EC2 instance and deploy the application
-  #         ssh -o StrictHostKeyChecking=no ubuntu@$EC2_IP << 'EOF'
-  #           # Update and install dependencies on EC2
-  #           sudo apt-get update -y
-  #           sudo apt-get install -y git
+      # Add EC2 server IP to known hosts to avoid prompts
+      - name: Add server to known hosts
+        run: ssh-keyscan -H ${{ steps.ec2_ip.outputs.EC2_IP }} >> ~/.ssh/known_hosts
 
-  #           # Clone or pull the latest changes from GitHub
-  #           cd /home/ubuntu/myapp || git clone https://github.com/myusername/myapp.git /home/ubuntu/myapp
-  #           cd /home/ubuntu/myapp
-  #           git pull origin main  # Pull latest changes from the repository
-
-  #           # Run deployment script
-  #           ./deploy.sh  # Replace with your custom deployment steps
-
-  #           # Restart application or services
-  #           sudo systemctl restart myapp.service
-  #         EOF
+      # SSH into the server and execute commands
+      - name: SSH into EC2 server
+        run: |
+          ssh -i ~/.ssh/id_rsa ubuntu@${{ steps.ec2_ip.outputs.EC2_IP }} << 'EOF'
+          echo "Connected to EC2 server"
+          # Add any commands you want to run here
+          EOF
