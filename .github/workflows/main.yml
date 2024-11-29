@@ -47,7 +47,8 @@ jobs:
 
       - name: Save ec2 tst ip
         id: ec2_ip_test
-        run: echo ${{ steps.apply.outputs.instance_public_ip }}
+        run: echo "EC2_IP=$(terraform output -raw instance_public_ip)"
+        # run: echo ${{ steps.apply.outputs.instance_public_ip }}
 
       - name: Save ec2 ip
         id: ec2_ip
