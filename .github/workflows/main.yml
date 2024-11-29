@@ -50,7 +50,7 @@ jobs:
     steps:
       - name: Save ec2 ip
         id: ec2_ip
-        run: echo "EC2_IP=$(terraform output -raw instance_ip)" >> $GITHUB_OUTPUT
+        run: echo "EC2_IP=$(terraform output -raw instance_public_ip)" >> $GITHUB_OUTPUT
 
       # Set up the SSH private key
       - name: Set up SSH key
