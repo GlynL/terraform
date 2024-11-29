@@ -35,12 +35,14 @@ jobs:
       - name: Terraform Plan
         env:
           TF_VAR_ssh_key_public: ${{ secrets.SSH_KEY_PUBLIC }}
+          TF_VAR_ssh_key_private: ${{ secrets.SSH_KEY_PRIVATE }}
         run: terraform plan -input=false
 
       # Apply Terraform configuration to provision or update the infrastructure
       - name: Terraform Apply
         env:
           TF_VAR_ssh_key_public: ${{ secrets.SSH_KEY_PUBLIC }}
+          TF_VAR_ssh_key_private: ${{ secrets.SSH_KEY_PRIVATE }}
         run: terraform apply -auto-approve
 
   # deploy:
