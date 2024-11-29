@@ -3,7 +3,7 @@ name: CI/CD Pipeline for Terraform and Deployment
 on:
   push:
     branches:
-      - main  # Trigger deployment on push to the main branch
+      - main # Trigger deployment on push to the main branch
 
 jobs:
   terraform:
@@ -20,13 +20,13 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-west-2  # Change to the desired AWS region
+          aws-region: us-west-2 # Change to the desired AWS region
 
       # Set up Terraform
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: '1.4.0'  # Set the version of Terraform you want to use
+          terraform_version: "1.4.0" # Set the version of Terraform you want to use
 
       # Terraform initialization and plan
       - name: Terraform Init
@@ -35,7 +35,7 @@ jobs:
       - name: Terraform Plan
         env:
           TF_VAR_ssh_key_public: ${{ secrets.SSH_KEY_PUBLIC }}
-        run: terraform plan
+        run: terraform plan -input=false
 
       # Apply Terraform configuration to provision or update the infrastructure
       - name: Terraform Apply
