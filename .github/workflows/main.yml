@@ -27,6 +27,7 @@ jobs:
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: "1.4.0" # Set the version of Terraform you want to use
+          terraform_wrapper: false
 
       # Terraform initialization and plan
       - name: Terraform Init
