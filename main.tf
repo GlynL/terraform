@@ -6,12 +6,48 @@ terraform {
     }
   }
 
+  backend "s3" {
+    bucket = "glyn-terraform" 
+    key    = "terraform/state.tfstate"
+    region = "eu-west-2"
+    # profile= ""
+  }
+
   required_version = ">= 1.2.0"
 }
 
 provider "aws" {
   region = "eu-west-2"
 }
+
+resource "aws_s3_bucket" "bucket" {
+  bucket = "glyn-terraform"
+  # acl    = "private"
+
+  tags = {
+    Name        = "My bucket"
+    Environment = "Dev"
+  }
+}
+
+# resource "aws_s3_bucket_versioning" "my_bucket_versioning" {
+#   bucket = aws_s3_bucket.my_bucket.id
+
+#   versioning_configuration {
+#     status = "Enabled"
+#   }
+# }
+
+# resource "aws_s3_bucket_server_side_encryption_configuration" "my_bucket_encryption" {
+#   bucket = aws_s3_bucket.my_bucket.id
+
+#   rule {
+#     apply_server_side_encryption_by_default {
+#       sse_algorithm = "AES256"
+#     }
+#   }
+# }
+
 
 resource "aws_instance" "app_server" {
   ami           = "ami-0e8d228ad90af673b"
