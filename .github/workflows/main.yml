@@ -27,7 +27,7 @@ jobs:
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: "1.4.0"
-          terraform_wrapper: true
+          terraform_wrapper: false # cnat get output of ip to work with wrapper: true
 
       # Terraform initialization and plan
       - name: Terraform Init
@@ -44,15 +44,6 @@ jobs:
         env:
           TF_VAR_ssh_key_public: ${{ secrets.SSH_KEY_PUBLIC }}
         run: terraform apply -auto-approve
-
-      - name: Save ec2 tst ip
-        id: ec2_ip_test
-        run: echo ${{ steps.apply.outputs.instance_public_ip }}
-
-      - run: echo ${{ steps.apply.outputs.instance }}
-      - run: echo "hi"
-        # run: echo "EC2_IP=$(terraform output -raw instance_public_ip)"
-        # run: echo ${{ steps.apply.outputs.instance_public_ip }}
 
       - name: Save ec2 ip
         id: ec2_ip
