@@ -50,7 +50,8 @@ jobs:
         run: echo ${{ steps.apply.outputs.stdout }}
 
       - run: echo ${{ steps.apply.outputs.instance.public_ip }}
-      - run: echo ${{ steps.apply.outputs }}
+      - run: echo ${{ steps.apply.outputs.instance }}
+      - run: echo "hi"
         # run: echo "EC2_IP=$(terraform output -raw instance_public_ip)"
         # run: echo ${{ steps.apply.outputs.instance_public_ip }}
 
