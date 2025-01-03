@@ -20,13 +20,13 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-west-2 # Change to the desired AWS region
+          aws-region: eu-west-2
 
       # Set up Terraform
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: "1.4.0" # Set the version of Terraform you want to use
+          terraform_version: "1.4.0"
           terraform_wrapper: false
 
       # Terraform initialization and plan
@@ -47,7 +47,11 @@ jobs:
 
       - name: Save ec2 tst ip
         id: ec2_ip_test
-        run: echo "EC2_IP=$(terraform output -raw instance_public_ip)"
+        run: echo ${{ steps.apply.outputs.stdout }}
+
+      - run: echo ${{ steps.apply.outputs.instance.public_ip }}
+      - run: echo ${{ steps.apply.outputs }}
+        # run: echo "EC2_IP=$(terraform output -raw instance_public_ip)"
         # run: echo ${{ steps.apply.outputs.instance_public_ip }}
 
       - name: Save ec2 ip
