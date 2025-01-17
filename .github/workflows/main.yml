@@ -9,6 +9,9 @@ jobs:
   terraform:
     runs-on: ubuntu-latest
 
+    outputs:
+      ec2_ip: ${{ steps.ec2_ip.outputs.ec2_ip }}
+
     steps:
       # Checkout code from the repository
       - name: Checkout code
@@ -63,12 +66,12 @@ jobs:
 
       # Add EC2 server IP to known hosts to avoid prompts
       - name: Add server to known hosts
-        run: ssh-keyscan -H ${{ steps.ec2_ip.outputs.EC2_IP }} >> ~/.ssh/known_hosts
+        run: ssh-keyscan -H ${{ needs.terraform.outputs.ec2_ip }} >> ~/.ssh/known_hosts
 
       # SSH into the server and execute commands
       - name: SSH into EC2 server
         run: |
-          ssh -i ~/.ssh/id_rsa ubuntu@${{ steps.ec2_ip.outputs.EC2_IP }} << 'EOF'
+          ssh -i ~/.ssh/id_rsa ubuntu@${{ needs.terraform.outputs.ec2_ip }} << 'EOF'
           echo "Connected to EC2 server"
           # Add any commands you want to run here
           EOF
